@@ -17,7 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 
-public var deleteItem: Boolean = false
+//User can toggle a mode where they can delete things
+ var deleteItem: Boolean = false
 
 
 
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.deleteTask)
         val clearList = findViewById<Button>(R.id.clearList)
         val myRv = findViewById<RecyclerView>(R.id.myRv)
+        deleteItem = false
 
 
         //RecyclerView Adapter
@@ -44,14 +46,17 @@ class MainActivity : AppCompatActivity() {
 
 
         addButton.setOnClickListener {
-            var input  = findViewById<TextInputEditText>(R.id.enterText).text.toString()
-            var newText = findViewById<TextInputEditText>(R.id.enterText)
-            //Toast.makeText(this, input, Toast.LENGTH_SHORT).show()
+            var input  = findViewById<TextInputEditText>(R.id.enterText)
+            //var newText = findViewById<TextInputEditText>(R.id.enterText)
 
-            if (input != "")checkList.add(input)
+            //If the input isn't empty, then add the content to the array
+            if (input.text.toString() != "") checkList.add(input.text.toString())
 
+            //Notify the adapter
             myRv.adapter!! .notifyDataSetChanged()
-             newText.setText("")
+
+            //Clear the input
+             input.setText("")
 
         }
 
@@ -64,27 +69,22 @@ class MainActivity : AppCompatActivity() {
             when (motionEvent.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     deleteItem = !deleteItem
-//                    checkList.clear()
-//                    myRv.adapter!! .notifyDataSetChanged()
 
+                    //if delete: on, make the button fully colored and change the button text
                     if (deleteItem) {
                         deleteButton.setBackgroundColor(Color.argb(255, 255, 0, 0))
                         deleteButton.setText("Delete: On")
                     }
+                    //if delete: off, make button lighter color and change the button text
                     if (!deleteItem) {
                         deleteButton.setBackgroundColor(Color.argb(50, 255, 0, 0))
                         deleteButton.setText("Delete: Off")
                     }
-                    //Toast.makeText(this, "$deleteItem", Toast.LENGTH_SHORT).show()
+
 
                     true
                 }
-                MotionEvent.ACTION_UP -> {
-                    //deleteItem = false
-                    //Toast.makeText(this, "$deleteItem", Toast.LENGTH_SHORT).show()
 
-                    true
-                }
                 else -> true
             }
 
@@ -92,6 +92,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         clearList.setOnClickListener {
+
+            //Clear everything and notify the adapter
             checkList.clear()
             myRv.adapter!! .notifyDataSetChanged()
         }
@@ -120,9 +122,7 @@ class MyAdapter (private val array: ArrayList<String>, private val context: Cont
         val inflater = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_list_content, parent, false) as CheckedTextView
 
-
         return MyViewHolder (inflater)
-
 
     }
 
@@ -130,26 +130,26 @@ class MyAdapter (private val array: ArrayList<String>, private val context: Cont
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val adapter: MyAdapter = this
+
+        //Makes the arraylist item appear in the holder in the same order as the arraylist
         (holder.itemView as CheckedTextView).text = array[position]
-        var currentText = (holder.itemView).text.toString()
 
 
+        //The item is initially unchecked
         holder.itemView.isChecked = false
         holder.itemView.setCheckMarkDrawable(android.R.drawable.
         checkbox_off_background)
 
-
-
-
         holder.itemView.setOnClickListener{
-        //Toast.makeText(context, currentText, Toast.LENGTH_SHORT).show()
+
+        //When the item's clicked, it toggles the checkmark
         holder.itemView.isChecked = !holder.itemView.isChecked
             holder.itemView.setCheckMarkDrawable(if(holder.itemView.isChecked)
                 android.R.drawable.checkbox_on_background
                 else android.R.drawable.checkbox_off_background)
 
+            //if delete: on and the arraylist is not empty, remove the item that's been clicked
             if (deleteItem && array != null) {
-                Toast.makeText(context, "delete", Toast.LENGTH_SHORT).show()
                 array.removeAt(position)
                 adapter!! .notifyItemRemoved(position)
 
@@ -162,9 +162,6 @@ class MyAdapter (private val array: ArrayList<String>, private val context: Cont
 
     }
 
-
-
     override fun getItemCount() = array.size
-
 
 }

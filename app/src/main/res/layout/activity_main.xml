@@ -60,7 +60,7 @@
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ScrollView
-        android:id="@+id/scrollView3"
+        android:id="@+id/myScrollView"
         android:layout_width="392dp"
         android:layout_height="437dp"
         android:layout_marginTop="12dp"
@@ -83,7 +83,7 @@
         android:id="@+id/deleteTask"
         android:layout_width="201dp"
         android:layout_height="65dp"
-        android:alpha="50"
+        android:alpha="100"
         android:background="#80FF0000"
         android:contentDescription="Delete button"
         android:text="Delete: Off"
@@ -101,8 +101,9 @@
         android:text="Clear List"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/deleteTask"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        app:srcCompat="@android:drawable/ic_menu_delete"
+        tools:ignore="TextContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
